@@ -8,9 +8,9 @@ describe('Speech Preparation Engine', () => {
       expect(result.changes.length).toBeGreaterThan(0);
     });
 
-    test('SHA-256 -> SHA two five six', () => {
+    test('SHA-256 -> S H A two five six', () => {
       const result = prepareForSpeech('SHA-256');
-      expect(result.preparedText).toBe('SHA two five six');
+      expect(result.preparedText).toBe('S H A two five six');
       expect(result.changes.length).toBeGreaterThan(0);
     });
 
@@ -62,7 +62,7 @@ describe('Speech Preparation Engine', () => {
 
     test('Semantic version: v1.14.2', () => {
       const result = prepareForSpeech('v1.14.2');
-      expect(result.preparedText).toContain('one point 14 point two');
+      expect(result.preparedText).toContain('version one point fourteen point two');
     });
   });
 
@@ -115,7 +115,7 @@ describe('Speech Preparation Engine', () => {
       expect(result.preparedText).toContain('A P I');
       expect(result.preparedText).toContain('two point zero');
       expect(result.preparedText).toContain('C I slash C D');
-      expect(result.preparedText).toContain('SHA two five six');
+      expect(result.preparedText).toContain('S H A two five six');
       expect(result.changes.length).toBeGreaterThan(3);
     });
 

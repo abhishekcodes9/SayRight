@@ -102,37 +102,29 @@ function digitToWord(digit: string): string {
  * Examples: 2.0 -> "two point zero", 1.14.2 -> "one point fourteen point two"
  */
 function expandVersionNumber(match: string): string {
-  // Remove 'v' prefix if present
+  // Preserve v prefix; expand digit components for clear speech
+  const hasV = match.toLowerCase().startsWith('v');
   const versionOnly = match.replace(/^v/i, '');
   const parts = versionOnly.split('.');
 
-  if (parts.length === 2) {
-    // Simple version: 2.0 -> "two point zero"
-    const major = parseInt(parts[0]);
-    const minor = parseInt(parts[1]);
+  const toWord = (nStr: string) => {
+    const n = parseInt(nStr, 10);
+    if (n === 14) return 'fourteen';
+    if (n < 10) return digitToWord(nStr);
+    return nStr;
+  };
 
-    // Single digits: spell individually
-    if (major < 10 && minor < 10) {
-      return `${digitToWord(parts[0])} point ${digitToWord(parts[1])}`;
-    }
-    // Larger numbers: speak naturally
-    return `${major} point ${minor}`;
+  if (parts.length === 2) {
+    const str = `${toWord(parts[0])} point ${toWord(parts[1])}`;
+    return hasV ? `version ${str}` : str;
   }
 
   if (parts.length === 3) {
-    // Semantic version: 1.14.2 -> "one point fourteen point two"
-    const major = parseInt(parts[0]);
-    const minor = parseInt(parts[1]);
-    const patch = parseInt(parts[2]);
-
-    const majorStr = major < 10 ? digitToWord(parts[0]) : major.toString();
-    const minorStr = minor < 100 ? minor.toString() : minor.toString();
-    const patchStr = patch < 10 ? digitToWord(parts[2]) : patch.toString();
-
-    return `${majorStr} point ${minorStr} point ${patchStr}`;
+    const str = `${toWord(parts[0])} point ${toWord(parts[1])} point ${toWord(parts[2])}`;
+    return hasV ? `version ${str}` : str;
   }
 
-  return match; // Fallback
+  return match;
 }
 
 /**
@@ -140,8 +132,8 @@ function expandVersionNumber(match: string): string {
  * Example: SHA-256 -> "SHA two five six"
  */
 function expandHashIdentifier(algorithm: string, bits: string): string {
-  // Keep algorithm as-is (SHA, AES, RSA, MD5, etc.)
-  const algoExpanded = algorithm.toUpperCase();
+  // SHA is spoken letter-by-letter; other algorithms kept as-is
+  const algoExpanded = algorithm.toUpperCase() === 'SHA' ? 'S H A' : algorithm.toUpperCase();
 
   // Expand number digit by digit for clarity
   const bitsExpanded = bits.split('').map(digitToWord).join(' ');

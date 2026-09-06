@@ -63,7 +63,7 @@ describe('POST /api/prepare', () => {
       expect(res.body.preparedText).toContain('A P I');
       expect(res.body.preparedText).toContain('two point zero');
       expect(res.body.preparedText).toContain('C I slash C D');
-      expect(res.body.preparedText).toContain('SHA two five six');
+      expect(res.body.preparedText).toContain('S H A two five six');
       expect(Array.isArray(res.body.changes)).toBe(true);
       expect(res.body.changes.length).toBeGreaterThan(0);
     });
