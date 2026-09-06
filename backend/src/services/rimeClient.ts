@@ -2,13 +2,6 @@ import axios from 'axios';
 
 const RIME_API_URL = 'https://users.rime.ai/v1/rime-tts';
 
-interface RimeTTSRequest {
-  text: string;
-  speaker: string;
-  modelId: string;
-  lang: string;
-}
-
 export class RimeClient {
   private apiKey: string;
 
@@ -25,11 +18,12 @@ export class RimeClient {
    * @returns Audio buffer (MP3 format)
    */
   async generateSpeech(text: string): Promise<Buffer> {
-    const requestBody: RimeTTSRequest = {
+    const requestBody = {
       text: text,
       speaker: 'astra',
       modelId: 'coda',
-      lang: 'en'
+      lang: 'en',
+      audioConfig: { encoding: 'mp3' }
     };
 
     try {

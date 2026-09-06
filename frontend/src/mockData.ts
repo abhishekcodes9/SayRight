@@ -1,4 +1,4 @@
-import type { ExamplePreset, SpeechPrepResult, VoiceConfig } from './types';
+import type { ExamplePreset } from './types';
 
 export const EXAMPLE_CHIPS: ExamplePreset[] = [
   {
@@ -53,64 +53,10 @@ export const STRESS_TEST_PROMPT: ExamplePreset = {
   category: 'Stress Test'
 };
 
-export const INITIAL_PREVIEW_RESULT: SpeechPrepResult = {
-  originalText: 'Deploy the OAuth 2.0 API v1.14.2 on a Kubernetes cluster with CI/CD, PostgreSQL replication, and SHA-256 signed JWT tokens over HTTPS.',
-  preparedText: 'Deploy the OAuth two point zero A P I one point 14 point two on a Kubernetes cluster with C I slash C D, Postgres Q L replication, and SHA two five six signed J W T tokens over H T T P S.',
-  changes: [
-    {
-      original: '2.0',
-      prepared: 'two point zero',
-      reason: 'Version number — expanded for clear conversational cadence',
-      category: 'version'
-    },
-    {
-      original: 'API',
-      prepared: 'A P I',
-      reason: 'Technical initialism — spaced for individual letter articulation',
-      category: 'protocol'
-    },
-    {
-      original: 'v1.14.2',
-      prepared: 'one point 14 point two',
-      reason: 'Semantic version — strip prefix and speak major, minor, patch units',
-      category: 'version'
-    },
-    {
-      original: 'CI/CD',
-      prepared: 'C I slash C D',
-      reason: 'Slash-separated DevOps initialism — explicit slash vocalization',
-      category: 'devops'
-    },
-    {
-      original: 'PostgreSQL',
-      prepared: 'Postgres Q L',
-      reason: 'Compound database name — syllabic expansion for natural delivery',
-      category: 'database'
-    },
-    {
-      original: 'SHA-256',
-      prepared: 'SHA two five six',
-      reason: 'Cryptographic hash — algorithm preserved, bit width expanded digit-by-digit',
-      category: 'crypto'
-    },
-    {
-      original: 'JWT',
-      prepared: 'J W T',
-      reason: 'JSON Web Token initialism — spell out letter-by-letter',
-      category: 'protocol'
-    },
-    {
-      original: 'HTTPS',
-      prepared: 'H T T P S',
-      reason: 'Secure transfer protocol — explicit character pacing',
-      category: 'protocol'
-    }
-  ]
-};
-
-export const DEFAULT_VOICE_CONFIG: VoiceConfig = {
+export const DEFAULT_VOICE_CONFIG = {
   speaker: 'astra',
   modelId: 'coda',
   lang: 'en',
   sampleRate: '24kHz (Controlled 1:1 Parity)'
 };
+

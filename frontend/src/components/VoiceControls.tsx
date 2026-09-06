@@ -4,11 +4,23 @@ import { DEFAULT_VOICE_CONFIG } from '../mockData';
 interface VoiceControlsProps {
   hasInput: boolean;
   hasPrepared: boolean;
+  rawAudioLoading: boolean;
+  preparedAudioLoading: boolean;
+  rawAudioError: string | null;
+  preparedAudioError: string | null;
+  onSpeakRaw: () => void;
+  onSpeakPrepared: () => void;
 }
 
 export const VoiceControls: React.FC<VoiceControlsProps> = ({
   hasInput,
-  hasPrepared
+  hasPrepared,
+  rawAudioLoading,
+  preparedAudioLoading,
+  rawAudioError,
+  preparedAudioError,
+  onSpeakRaw,
+  onSpeakPrepared
 }) => {
   return (
     <section className="card voice-section">
@@ -56,7 +68,7 @@ export const VoiceControls: React.FC<VoiceControlsProps> = ({
           </div>
 
           <div className="audio-player-mock">
-            <div className="waveform-mock">
+            <div className={`waveform-mock${rawAudioLoading ? ' active-waveform' : ''}`}>
               <span className="bar bar-1"></span>
               <span className="bar bar-2"></span>
               <span className="bar bar-3"></span>
@@ -71,19 +83,36 @@ export const VoiceControls: React.FC<VoiceControlsProps> = ({
               <span className="bar bar-12"></span>
             </div>
             <div className="player-meta">
-              <span className="time-display">0:00 / --:--</span>
+              <span className="time-display">
+                {rawAudioLoading ? 'Generating…' : '0:00 / --:--'}
+              </span>
               <span className="format-tag">MP3 (24kHz)</span>
             </div>
           </div>
+
+          {rawAudioError && (
+            <p className="voice-note" style={{ color: '#f87171' }}>
+              ⚠️ {rawAudioError}
+            </p>
+          )}
 
           <div className="voice-card-actions">
             <button
               type="button"
               className="btn btn-voice btn-raw-voice"
-              disabled={!hasInput}
+              onClick={onSpeakRaw}
+              disabled={!hasInput || rawAudioLoading}
             >
-              <span className="btn-icon">▶</span>
-              <span>Speak Raw (Rime API)</span>
+              {rawAudioLoading ? (
+                <>
+                  <span className="spinner-sm"></span> Generating...
+                </>
+              ) : (
+                <>
+                  <span className="btn-icon">▶</span>
+                  <span>Speak Raw (Rime API)</span>
+                </>
+              )}
             </button>
           </div>
           <p className="voice-note">
@@ -102,7 +131,7 @@ export const VoiceControls: React.FC<VoiceControlsProps> = ({
           </div>
 
           <div className="audio-player-mock">
-            <div className="waveform-mock active-waveform">
+            <div className={`waveform-mock active-waveform${preparedAudioLoading ? '' : ''}`}>
               <span className="bar bar-1"></span>
               <span className="bar bar-2"></span>
               <span className="bar bar-3"></span>
@@ -117,19 +146,36 @@ export const VoiceControls: React.FC<VoiceControlsProps> = ({
               <span className="bar bar-12"></span>
             </div>
             <div className="player-meta">
-              <span className="time-display">0:00 / --:--</span>
+              <span className="time-display">
+                {preparedAudioLoading ? 'Generating…' : '0:00 / --:--'}
+              </span>
               <span className="format-tag">MP3 (24kHz)</span>
             </div>
           </div>
+
+          {preparedAudioError && (
+            <p className="voice-note" style={{ color: '#f87171' }}>
+              ⚠️ {preparedAudioError}
+            </p>
+          )}
 
           <div className="voice-card-actions">
             <button
               type="button"
               className="btn btn-voice btn-prepared-voice"
-              disabled={!hasPrepared}
+              onClick={onSpeakPrepared}
+              disabled={!hasPrepared || preparedAudioLoading}
             >
-              <span className="btn-icon">⚡</span>
-              <span>Speak with SayRight</span>
+              {preparedAudioLoading ? (
+                <>
+                  <span className="spinner-sm"></span> Generating...
+                </>
+              ) : (
+                <>
+                  <span className="btn-icon">⚡</span>
+                  <span>Speak with SayRight</span>
+                </>
+              )}
             </button>
           </div>
           <p className="voice-note success">
