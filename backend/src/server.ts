@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { RimeClient } from './services/rimeClient';
+import { prepareForSpeech } from './services/speechPrep';
 
 // Load environment variables
 dotenv.config();
@@ -29,13 +30,56 @@ try {
 }
 
 // Health check endpoint
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
     service: 'SayRight Backend',
     timestamp: new Date().toISOString(),
     rimeConfigured: rimeClient !== null
   });
+});
+
+// Speech preparation endpoint
+app.post('/api/prepare', (req: Request, res: Response) => {
+  try {
+    const { text } = req.body;
+
+    if (text === undefined || text === null) {
+      return res.status(400).json({
+        error: 'Missing required field',
+        message: 'Text is required'
+      });
+    }
+
+    if (typeof text !== 'string') {
+      return res.status(400).json({
+        error: 'Invalid field type',
+        message: 'Text must be a string'
+      });
+    }
+
+    if (text.trim() === '') {
+      return res.status(400).json({
+        error: 'Invalid input',
+        message: 'Text cannot be empty'
+      });
+    }
+
+    const result = prepareForSpeech(text);
+
+    res.json({
+      originalText: result.originalText,
+      preparedText: result.preparedText,
+      changes: result.changes
+    });
+  } catch (error) {
+    console.error('Error in /api/prepare:', (error as Error).message);
+
+    res.status(500).json({
+      error: 'Speech preparation failed',
+      message: (error as Error).message
+    });
+  }
 });
 
 // TTS endpoint
