@@ -1,0 +1,93 @@
+:root {
+  --bg-primary: #0a0b10;
+  --bg-surface: #12141d;
+  --bg-surface-hover: #191c28;
+  --bg-card: #151824;
+  --bg-card-subtle: #1c2030;
+  --bg-code: #0d0f18;
+
+  --border-subtle: #232738;
+  --border-strong: #333950;
+  --border-accent: #6366f1;
+
+  --text-primary: #f1f3f9;
+  --text-secondary: #949db2;
+  --text-muted: #5e667d;
+  --text-inverse: #0a0b10;
+
+  --accent-primary: #6366f1;
+  --accent-primary-hover: #4f46e5;
+  --accent-glow: rgba(99, 102, 241, 0.25);
+
+  --color-raw: #f59e0b;
+  --color-raw-bg: rgba(245, 158, 11, 0.12);
+  --color-raw-border: rgba(245, 158, 11, 0.35);
+
+  --color-prepared: #10b981;
+  --color-prepared-bg: rgba(16, 185, 129, 0.12);
+  --color-prepared-border: rgba(16, 185, 129, 0.35);
+
+  --color-cyan: #06b6d4;
+  --color-cyan-bg: rgba(6, 182, 212, 0.12);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px -5px var(--accent-glow);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+textarea {
+  font-family: var(--font-mono);
+  resize: vertical;
+}
+
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
