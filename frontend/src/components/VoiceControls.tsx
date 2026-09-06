@@ -131,7 +131,7 @@ export const VoiceControls: React.FC<VoiceControlsProps> = ({
           </div>
 
           <div className="audio-player-mock">
-            <div className={`waveform-mock active-waveform${preparedAudioLoading ? '' : ''}`}>
+            <div className={`waveform-mock${preparedAudioLoading ? ' active-waveform' : ''}`}>
               <span className="bar bar-1"></span>
               <span className="bar bar-2"></span>
               <span className="bar bar-3"></span>

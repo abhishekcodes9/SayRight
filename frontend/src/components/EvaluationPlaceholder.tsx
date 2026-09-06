@@ -6,13 +6,13 @@ export const EvaluationPlaceholder: React.FC = () => {
       <div className="section-header">
         <div className="title-row">
           <span className="step-number">05</span>
-          <h2 className="section-title">A/B Speech Quality Evaluation Criteria</h2>
+          <h2 className="section-title">Evaluation & Acceptance Criteria</h2>
         </div>
-        <span className="badge badge-eval">Acceptance Criteria</span>
+        <span className="badge badge-eval">To Be Tested</span>
       </div>
 
       <p className="section-subtitle">
-        Qualitative evaluation criteria to be validated via side-by-side listening and acceptance testing under identical Rime TTS parameters.
+        Qualitative dimensions for observing side-by-side Rime TTS output. No scores or benchmark claims are made; observations must be recorded manually.
       </p>
 
       <div className="eval-grid">
@@ -22,17 +22,11 @@ export const EvaluationPlaceholder: React.FC = () => {
             <h4 className="metric-title">Intelligibility</h4>
           </div>
           <p className="metric-desc">
-            Technical initialisms (<code>JWT</code>, <code>gRPC</code>, <code>k8s</code>) and semantic version structures are phonetically spaced so every syllable is distinct and intelligible.
+            Are initialisms, abbreviations, and alphanumeric tokens clearly distinguishable when spoken?
           </p>
           <div className="criteria-checklist">
-            <div className="criteria-item">
-              <span className="criteria-bullet">▪</span>
-              <span>Individual character spacing for initialisms</span>
-            </div>
-            <div className="criteria-item">
-              <span className="criteria-bullet">▪</span>
-              <span>Clear digit-by-digit expansion for crypto hashes</span>
-            </div>
+            <div className="criteria-item"><span>▪</span><span>Letter-by-letter or phonetic spacing</span></div>
+            <div className="criteria-item"><span>▪</span><span>Digit groups clearly separated</span></div>
           </div>
         </div>
 
@@ -42,17 +36,11 @@ export const EvaluationPlaceholder: React.FC = () => {
             <h4 className="metric-title">Delivery Clarity</h4>
           </div>
           <p className="metric-desc">
-            Replaces awkward, literal slash and punctuation reading with natural conversational phrasing (e.g. <code>CI/CD</code> spoken as "C I slash C D").
+            Is punctuation and syntax handled in a conversational rather than literal manner?
           </p>
           <div className="criteria-checklist">
-            <div className="criteria-item">
-              <span className="criteria-bullet">▪</span>
-              <span>Explicit conversational punctuation handling</span>
-            </div>
-            <div className="criteria-item">
-              <span className="criteria-bullet">▪</span>
-              <span>Natural cadence without abrupt TTS stops</span>
-            </div>
+            <div className="criteria-item"><span>▪</span><span>Natural cadence and pauses</span></div>
+            <div className="criteria-item"><span>▪</span><span>Avoidance of abrupt stops</span></div>
           </div>
         </div>
 
@@ -62,17 +50,11 @@ export const EvaluationPlaceholder: React.FC = () => {
             <h4 className="metric-title">Technical Fidelity</h4>
           </div>
           <p className="metric-desc">
-            Preserves domain-specific semantic meaning without loss of technical nuance, preserving versions, bit widths, and protocol identities.
+            Does the prepared output preserve all technical meaning without altering versions, protocols, or identifiers?
           </p>
           <div className="criteria-checklist">
-            <div className="criteria-item">
-              <span className="criteria-bullet">▪</span>
-              <span>Zero alteration of underlying technical meaning</span>
-            </div>
-            <div className="criteria-item">
-              <span className="criteria-bullet">▪</span>
-              <span>Exact version and patch level preservation</span>
-            </div>
+            <div className="criteria-item"><span>▪</span><span>No semantic alteration</span></div>
+            <div className="criteria-item"><span>▪</span><span>Versions, hashes, and names intact</span></div>
           </div>
         </div>
 
@@ -82,25 +64,46 @@ export const EvaluationPlaceholder: React.FC = () => {
             <h4 className="metric-title">Consistency</h4>
           </div>
           <p className="metric-desc">
-            Deterministic rule execution guarantees identical, reproducible preparation across runs with zero non-deterministic drift.
+            Is the preparation deterministic and reproducible under identical Rime parameters?
           </p>
           <div className="criteria-checklist">
-            <div className="criteria-item">
-              <span className="criteria-bullet">▪</span>
-              <span>Deterministic rule-based transformation</span>
-            </div>
-            <div className="criteria-item">
-              <span className="criteria-bullet">▪</span>
-              <span>1:1 controlled Rime parameter parity</span>
-            </div>
+            <div className="criteria-item"><span>▪</span><span>Same input → same prepared output</span></div>
+            <div className="criteria-item"><span>▪</span><span>1:1 controlled Rime parity</span></div>
           </div>
         </div>
+      </div>
+
+      <div style={{ marginTop: '1.25rem', padding: '1rem', background: 'var(--bg-code)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)' }}>
+        <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Acceptance Corpus (observation set — not results)</h4>
+        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Around 20 technical terms/sentences to be listened to under identical Rime settings. No results recorded here.</p>
+        <ul style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: '1.1rem' }}>
+          <li>OAuth 2.0 / JWT bearer tokens over HTTPS</li>
+          <li>PostgreSQL replication with SSL enabled</li>
+          <li>k8s ingress v1.28.0</li>
+          <li>SHA-256 and MD5-128 cryptographic checksums</li>
+          <li>WebSocket wss://api.example.com/v2/stream</li>
+          <li>XGBoost classifier with CUDA and ROC-AUC</li>
+          <li>CI/CD pipeline with automated deployment</li>
+          <li>gRPC microservice endpoint at 10.0.0.1:8080</li>
+          <li>GraphQL mutation with JWT authorization</li>
+          <li>Kafka topic partition-3 offset 1048576</li>
+          <li>Redis cluster node shard-01 master</li>
+          <li>Docker-compose v2.23.1 with healthchecks</li>
+          <li>Terraform state s3://tf-state-bucket/prod/</li>
+          <li>Prometheus metric scrape_interval 15s</li>
+          <li>NGINX reverse proxy /api/v2/health</li>
+          <li>OpenSSL TLS 1.3 cipher ECDHE-RSA-AES256-GCM-SHA384</li>
+          <li>IPv6 address 2001:0db8:85a3::8a2e:0370:7334</li>
+          <li>Base64-encoded ECDSA public key block</li>
+          <li>SemVer v3.2.1-alpha.1 pre-release</li>
+          <li>Full-stack stress sentence combining all above categories</li>
+        </ul>
       </div>
 
       <div className="eval-footer-note">
         <span className="eval-note-icon">ℹ️</span>
         <span>
-          Note: These criteria represent qualitative evaluation dimensions for manual and automated acceptance tests. No synthetic benchmark statistics or fabricated metrics are claimed.
+          These criteria describe observation dimensions only. No synthetic benchmark statistics, fabricated scores, or universal improvement claims are made. Record actual listening observations in RIME_EVIDENCE.md.
         </span>
       </div>
     </section>

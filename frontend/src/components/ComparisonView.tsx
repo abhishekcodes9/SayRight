@@ -30,8 +30,8 @@ export const ComparisonView: React.FC<ComparisonViewProps> = ({ result }) => {
           <span className="step-number">02</span>
           <h2 className="section-title">Original vs. SayRight Prepared</h2>
         </div>
-        <div className="status-badge preview">
-          <span>Preview</span>
+        <div className="status-badge result">
+          <span>Result</span>
         </div>
       </div>
 

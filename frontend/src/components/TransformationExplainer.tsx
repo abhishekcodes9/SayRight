@@ -14,10 +14,10 @@ export const TransformationExplainer: React.FC<TransformationExplainerProps> = (
             <span className="step-number">03</span>
             <h2 className="section-title">Transformation Explanations</h2>
           </div>
-          <span className="count-pill preview-pill">Preview</span>
+          <span className="count-pill explanation-pill">Explanation</span>
         </div>
         <div className="empty-message">
-          <p>No transformations in preview. Enter text above to inspect rule explanations.</p>
+          <p>No transformations yet. Enter text above to inspect rule explanations.</p>
         </div>
       </section>
     );
@@ -30,11 +30,11 @@ export const TransformationExplainer: React.FC<TransformationExplainerProps> = (
           <span className="step-number">03</span>
           <h2 className="section-title">Transformation Explanations</h2>
         </div>
-        <span className="count-pill preview-pill">Preview</span>
+        <span className="count-pill explanation-pill">Explanation</span>
       </div>
 
       <p className="section-subtitle">
-        Rule-based deterministic modifications and their phonetic rationale.
+        Deterministic rule applications and their phonetic rationale.
       </p>
 
       <div className="transformations-table-wrapper">
