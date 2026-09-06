@@ -9,8 +9,8 @@ import { STRESS_TEST_PROMPT } from './mockData';
 import type { ExamplePreset, SpeechPrepResult } from './types';
 import './App.css';
 
-const API_URL = 'http://localhost:3001/api/prepare';
-const SPEAK_URL = 'http://localhost:3001/api/speak';
+const API_URL = 'https://sayright-backend.vercel.app/api/prepare';
+const SPEAK_URL = 'https://sayright-backend.vercel.app/api/speak';
 
 export function App() {
   const [inputText, setInputText] = useState<string>(STRESS_TEST_PROMPT.text);
