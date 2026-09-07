@@ -167,4 +167,50 @@ describe('Speech Preparation Engine', () => {
       expect(result.preparedText).not.toBe(original);
     });
   });
+
+  describe('Comma After Spelled Abbreviations', () => {
+    test('JWT authentication -> J W T, authentication', () => {
+      const result = prepareForSpeech('JWT authentication');
+      expect(result.preparedText).toBe('J W T, authentication');
+    });
+
+    test('HTTPS protocol -> H T T P S, protocol', () => {
+      const result = prepareForSpeech('HTTPS protocol');
+      expect(result.preparedText).toBe('H T T P S, protocol');
+    });
+
+    test('REST API endpoint -> REST A P I, endpoint', () => {
+      const result = prepareForSpeech('REST API endpoint');
+      expect(result.preparedText).toBe('REST A P I, endpoint');
+    });
+
+    test('does not add comma before slash (CI/CD expansion)', () => {
+      const result = prepareForSpeech('CI/CD');
+      expect(result.preparedText).toBe('C I slash C D');
+    });
+
+    test('does not add comma before point (version expansion)', () => {
+      const result = prepareForSpeech('v2.0');
+      expect(result.preparedText).toBe('version two point zero');
+    });
+
+    test('does not add comma before number words (SHA-256 expansion)', () => {
+      const result = prepareForSpeech('SHA-256');
+      expect(result.preparedText).toBe('S H A two five six');
+    });
+
+    test('plain text remains unchanged', () => {
+      const text = 'Hello world';
+      const result = prepareForSpeech(text);
+      expect(result.preparedText).toBe(text);
+      expect(result.changes.length).toBe(0);
+    });
+
+    test('mixed sentence with comma after JWT but not after SHA', () => {
+      const text = 'Use JWT with SHA-256.';
+      const result = prepareForSpeech(text);
+      expect(result.preparedText).toContain('J W T,');
+      expect(result.preparedText).toContain('S H A two five six');
+    });
+  });
 });

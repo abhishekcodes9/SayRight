@@ -142,6 +142,32 @@ function expandHashIdentifier(algorithm: string, bits: string): string {
 }
 
 /**
+ * Add a comma after a letter-by-letter spelled abbreviation
+ * when immediately followed by a normal lowercase word.
+ * Examples: "J W T authentication" -> "J W T, authentication"
+ * This gives Rime a natural micro-pause after processing the spelled acronym.
+ */
+function addCommaAfterSpelledAbbreviation(text: string): string {
+  // Words that follow spelled abbreviations in transformations but should NOT get commas
+  // These are parts of other transformation outputs (slash separators, version points, number words, etc.)
+  const EXCLUDED = new Set([
+    'slash', 'point', 'version',
+    'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'
+  ]);
+
+  // Pattern: spelled abbreviation (2+ letters separated by spaces) followed by space + lowercase word
+  return text.replace(
+    /([A-Z](?:\s+[A-Z])+)\s+([a-z]+)/g,
+    (match, abbrev, followingWord) => {
+      if (EXCLUDED.has(followingWord)) {
+        return match; // Don't add comma before excluded words
+      }
+      return `${abbrev}, ${followingWord}`;
+    }
+  );
+}
+
+/**
  * Main speech preparation function
  */
 export function prepareForSpeech(text: string): SpeechPrepResult {
@@ -271,6 +297,26 @@ export function prepareForSpeech(text: string): SpeechPrepResult {
       reason: t.reason,
       position: t.start
     });
+  }
+
+  // Step 5: Add comma after letter-by-letter spelled abbreviations
+  // This is a post-transform step so it doesn't interfere with position tracking
+  const preCommaText = prepared;
+  prepared = addCommaAfterSpelledAbbreviation(prepared);
+
+  // Log comma additions as changes for transparency
+  if (prepared !== preCommaText) {
+    // Find which spelled abbreviations got commas
+    const commaRegex = /([A-Z](?:\s+[A-Z])+)\s+,/g;
+    let commaMatch: RegExpExecArray | null;
+    while ((commaMatch = commaRegex.exec(preCommaText)) !== null) {
+      changes.unshift({
+        original: commaMatch[1] + ' ' + preCommaText.substring(commaMatch.index + commaMatch[1].length + 1).match(/^[a-z]+/)?.[0] || '',
+        prepared: commaMatch[1] + ',',
+        reason: 'Add comma after spelled abbreviation for natural pause',
+        position: commaMatch.index + commaMatch[1].length
+      });
+    }
   }
 
   return {
