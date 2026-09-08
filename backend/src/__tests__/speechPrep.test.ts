@@ -214,3 +214,10 @@ describe('Speech Preparation Engine', () => {
     });
   });
 });
+
+describe('Minimal Technical Pronunciation Lexicon', () => {
+  test('WebSocket', () => { expect(prepareForSpeech('WebSocket').preparedText).toBe('Web Socket'); });
+  test('PostgreSQL', () => { expect(prepareForSpeech('PostgreSQL').preparedText).toBe('Postgres S Q L'); });
+  test('MongoDB', () => { expect(prepareForSpeech('MongoDB').preparedText).toBe('Mongo D B'); });
+  test('GraphQL', () => { expect(prepareForSpeech('GraphQL').preparedText).toBe('Graph Q L'); });
+});

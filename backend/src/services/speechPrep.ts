@@ -19,6 +19,21 @@ export interface SpeechPrepResult {
 }
 
 /**
+ * Technical Pronunciation Lexicon
+ * Minimal curated set: only genuinely hard-to-pronounce technical terms.
+ */
+const TECHNICAL_PRONUNCIATION_LEXICON: Array<[RegExp, string, string]> = [
+  // Hard initialisms that TTS misreads
+  [ /\bWebSocket\b/gi, 'Web Socket', 'WebSocket - split compound' ],
+  [ /\bPostgreSQL\b/gi, 'Postgres S Q L', 'PostgreSQL - spell out' ],
+  [ /\bMongoDB\b/g, 'Mongo D B', 'MongoDB - spell out' ],
+  [ /\bMySQL\b/g, 'My S Q L', 'MySQL - spell out' ],
+  [ /\bGraphQL\b/gi, 'Graph Q L', 'GraphQL - spell out' ],
+  [ /\bReact\.js\b/gi, 'React dot J S', 'React.js - expand' ],
+  [ /\bNode\.js\b/gi, 'Node dot J S', 'Node.js - expand' ],
+];
+
+/**
  * Technical abbreviation dictionary
  * Format: [pattern, spoken form, reason]
  */
@@ -259,15 +274,36 @@ export function prepareForSpeech(text: string): SpeechPrepResult {
     });
   }
 
-  // Step 4: Handle technical abbreviations
+  // Step 4: Technical pronunciation lexicon (curated hard terms)
+  const lexiconMatches: Transformation[] = [];
+  TECHNICAL_PRONUNCIATION_LEXICON.forEach(([pattern, replacement, reason]) => {
+    const regex = new RegExp(pattern.source, pattern.flags);
+    let match: RegExpExecArray | null;
+    while ((match = regex.exec(text)) !== null) {
+      const overlaps = [...hashMatches, ...versionMatches, ...slashMatches].some(t =>
+        match!.index >= t.start && match!.index < t.end
+      );
+      if (!overlaps && match[0] !== replacement) {
+        lexiconMatches.push({
+          start: match.index,
+          end: match.index + match[0].length,
+          original: match[0],
+          replacement,
+          reason
+        });
+      }
+    }
+  });
+
+  // Step 5: Handle technical abbreviations
   const abbrMatches: Transformation[] = [];
   TECH_ABBREVIATIONS.forEach(([pattern, replacement, reason]) => {
     const regex = new RegExp(pattern.source, pattern.flags);
     let match: RegExpExecArray | null;
 
     while ((match = regex.exec(text)) !== null) {
-      // Skip if overlaps with hash, version, or slash matches
-      const overlaps = [...hashMatches, ...versionMatches, ...slashMatches].some(t =>
+      // Skip if overlaps with hash, version, slash, or lexicon matches
+      const overlaps = [...hashMatches, ...versionMatches, ...slashMatches, ...lexiconMatches].some(t =>
         match!.index >= t.start && match!.index < t.end
       );
       if (!overlaps && match[0] !== replacement) {
@@ -283,7 +319,7 @@ export function prepareForSpeech(text: string): SpeechPrepResult {
   });
 
   // Combine all transformations and sort by position
-  transformations.push(...hashMatches, ...versionMatches, ...slashMatches, ...abbrMatches);
+  transformations.push(...hashMatches, ...versionMatches, ...slashMatches, ...lexiconMatches, ...abbrMatches);
   transformations.sort((a, b) => a.start - b.start);
 
   // Apply transformations from end to start to preserve positions
