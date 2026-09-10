@@ -1,79 +1,126 @@
-# SayRight
+# SayRight — Make difficult technical language easier to say
 
-**Make difficult technical language easier to say.**
+SayRight is a voice-engineering tool that prepares difficult technical text for clearer TTS (text-to-speech) delivery using deterministic speech-preparation rules.
 
-SayRight prepares technical text for speech using deterministic rules, then compares Raw vs Prepared output through the same Rime TTS configuration for an honest A/B listening check.
+## What it is
 
-## Problem
+SayRight takes technical input (protocol names, version numbers, abbreviations, identifiers) and produces a prepared spoken form that is easier for a TTS engine to pronounce correctly. It then compares the original and prepared output side-by-side and can generate audio from both.
 
-Difficult technical terms, abbreviations, versions, hashes, identifiers, and punctuation can be awkward to deliver clearly in speech. Standard TTS often stumbles over tokens like `OAuth 2.0`, `SHA-256`, `CI/CD`, `k8s`, `v1.14.2`, or `wss://api.example.com/v2/stream`.
+## Target user / problem
 
-## Solution
+Technical presenters, documentation authors, and engineers need to read complex sentences aloud (e.g., in recordings, demos, or accessibility content). Raw technical text often confuses TTS systems: abbreviations sound like words, version numbers split incorrectly, slash-separated terms get misread, and domain-specific vocabulary renders poorly.
 
-- Input technical text (or pick a preset).
-- SayRight deterministically prepares the text for speech and shows each transformation with rationale.
-- Send both Original and Prepared versions through the same Rime TTS settings.
-- Listen side-by-side and record observations.
+## Why voice / TTS is necessary
 
-## Why Rime matters
+Text alone does not communicate pronunciation. TTS converts written text to audible speech, but its output quality depends heavily on how the text is structured. By preparing the text before TTS, SayRight improves the audible result without changing the intended meaning.
 
-Rime provides the speech generation layer used to compare Raw vs SayRight Prepared text under controlled parameters (`astra` / `coda` / `en`). The same endpoint (`https://users.rime.ai/v1/rime-tts`), speaker, model, and language are used for both streams — only the input text differs.
+## The hard voice problem Solve
 
-## Core flow
+Technical text contains patterns that TTS handles poorly:
+- Abbreviations (OAuth, JWT, SQL, UUID)
+- Version numbers (v1.14.2, v1.28.0, 1.0.0)
+- Slash-separated terms (wss://, HTTPS, CI/CD)
+- Symbols and identifiers (SHA-256, MD5-128, ROC-AUC)
+- Domain-specific vocabulary (PostgreSQL, Kubernetes, PyTorch, GraphQL)
+- Mixed alphanumeric identifiers (k8s, XGBoost)
 
-`Input → deterministic speech preparation → transformation explanations → Raw Rime voice → Prepared Rime voice → evaluation / evidence`
+SayRight applies a curated, deterministic expansion/formatting lexicon to these patterns before sending to Rime.
+
+## End-to-end user flow
+
+1. Enter technical text (paste, preset, or type).
+2. Click **Prepare Speech** — deterministic rules expand/format the text.
+3. See the **Prepared output** comparison (original vs. prepared with explanations).
+4. Click **Speak Raw** — original text sent to Rime.
+5. Click **Speak Prepared** — prepared text sent to Rime.
+6. Compare both audio samples (same voice/config; only text differs).
+7. Review the **Transformation audit** (before / after / why).
 
 ## Architecture
 
-- **Frontend:** React + TypeScript + Vite (`frontend/`)
-- **Backend:** Node + Express (`backend/`)
-- **Speech:** Rime TTS API (key stays server-side in `backend/.env`; never in client code)
-- **Evidence:** `RIME_EVIDENCE.md`
+- **Frontend**: React + TypeScript + Vite (client build: `npm run build`)
+- **Speech preparation**: deterministic rule-based service (backend `/api/prepare`)
+- **Text comparison**: original / prepared side-by-side with explanation
+- **Audio generation**: `POST /api/speak` → Node/Express → Rime TTS → WAV/PCM response
+- **TTS engine**: Rime (`users.rime.ai/v1/rime-tts`, speaker `astra`, model `coda`, lang `en`)
 
-## Important deterministic examples
+## Rime integration (actual implementation)
 
-- `OAuth 2.0` → `OAuth two point zero`
-- `SHA-256` → `SHA two five six`
-- `CI/CD` → `C I slash C D`
+The backend connects to Rime at:
 
-## Evaluation & Acceptance Criteria
+- Endpoint: `https://users.rime.ai/v1/rime-tts`
+- HTTP method: `POST`
+- Request format (JSON body): `{ text, speaker: 'astra', modelId: 'coda', lang: 'en', audioConfig: { encoding: 'mp3' } }`
+- Headers: `Authorization: Bearer ${RIME_API_KEY}`, `Content-Type: application/json`
+- Response format: `arraybuffer` (audio bytes, MP3 encoding per `audioConfig`)
+- Transport: HTTPS
+- Speaker: `astra`
+- Model ID: `coda`
+- Language: `en`
 
-Four qualitative dimensions (not scores):
-
-- **Intelligibility** — are tokens distinguishable?
-- **Delivery Clarity** — natural cadence, punctuation handling?
-- **Technical Fidelity** — meaning preserved?
-- **Consistency** — deterministic under identical Rime settings?
-
-Actual observations must be recorded. No fabricated benchmark numbers are claimed. See `RIME_EVIDENCE.md`.
+The frontend passes `VOICE_CONFIG = { speaker: 'astra', modelId: 'coda', lang: 'en' }` to `/api/speak`; the backend forwards to Rime with the same config.
 
 ## Setup
 
 ```bash
-# Install and run frontend
-cd frontend && npm install && npm run dev
+# Backend
+cd backend
+npm install
+cp .env.example .env  # fill RIME_API_KEY
+npm test
+npm start
 
-# Install and run backend
-cd backend && npm install && npm run dev
+# Frontend
+cd frontend
+npm install
+npm run build
+npm run dev
 ```
 
-Place your Rime API key in `backend/.env` (see `.env.example`); never expose it in the README or frontend bundle.
+## Environment variables
 
-## API
+- `RIME_API_KEY` — required for `/api/speak`. The backend checks it at startup; if missing or equal to `your_rime_api_key_here`, the endpoint is disabled with a warning.
+- `PORT` — backend port (default 3001).
 
-- `GET /api/health`
-- `POST /api/prepare` — deterministic speech preparation
-- `POST /api/speak` — Rime TTS proxy (server-side only)
+See `.env.example` for placeholder format.
 
-## Reproducibility
+## Tests
 
-Exact Rime config (`astra`, `coda`, `en`), comparison procedure, acceptance corpus (~20 items), and observation template: see `RIME_EVIDENCE.md`.
+- Backend: `npm test` (Jest, 44 tests pass across `prepare.test.ts` and `speechPrep.test.ts`)
+- Frontend build: `npm run build` (Vite + TypeScript)
 
-## Limitations
+## Acceptance test instructions
 
-- Deterministic rule-based preparation, not an AI pronunciation model.
-- Finite rule coverage; not every token is handled.
-- No universal improvement claim — evaluation requires actual listening/observation.
-- Evaluation is qualitative; no automated benchmark scores.
+1. Load the frontend at `https://sayright-delta.vercel.app/`.
+2. Select a preset (e.g., OAuth 2.0, Kubernetes, SHA-256, WebSocket).
+3. Click **Prepare Speech**.
+4. Verify transformed text appears, with explanations for changes.
+5. Click **Speak Raw** and **Speak Prepared**.
+6. Confirm both audio samples load and play.
+7. Confirm the audit shows before/after pairs with reasons.
 
-Built for DataForge 2026 Hackathon • Powered by Rime TTS.
+## Known limitations and failure behavior
+
+- SayRight does NOT claim universal pronunciation correctness.
+- Some transformations (e.g., SHA-256) can sometimes sound less natural/clear than raw speech; evaluation is case-by-case.
+- Deterministic rule-based preparation with a finite curated lexicon — not a universal TTS optimizer.
+- Rime output can vary by context; same text may render slightly differently across sessions.
+- The backend requires `RIME_API_KEY`; without it, `/api/speak` returns an error / is unavailable.
+- If Rime returns a 400/401/429/500, the backend passes the error message through to the frontend.
+
+## Reproduction
+
+- Source repository: `https://github.com/abhishekcodes9/SayRight`
+- Frontend: `https://sayright-delta.vercel.app/`
+- Backend: `https://sayright-backend.vercel.app/`
+
+To reproduce locally:
+```bash
+git clone https://github.com/abhishekcodes9/SayRight.git
+cd SayRight/backend && npm install && npm test
+cd ../frontend && npm install && npm run build
+```
+
+## Important clarification
+
+SayRight is NOT a universal pronunciation correctness detector. It does NOT analyze the user's voice, compare spoken output to a reference, or score pronunciation accuracy. It prepares written text deterministically and compares the written result with the original. Evaluation is based on controlled text comparison (same Rime model/speaker/config, only text changed) and manual listening, not on fabricated numerical benchmarks.
