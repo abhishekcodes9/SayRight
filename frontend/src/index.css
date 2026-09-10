@@ -1,37 +1,45 @@
 :root {
-  --bg-primary: #0a0b10;
-  --bg-surface: #12141d;
-  --bg-surface-hover: #191c28;
-  --bg-card: #151824;
-  --bg-card-subtle: #1c2030;
-  --bg-code: #0d0f18;
-
-  --border-subtle: #232738;
-  --border-strong: #333950;
-  --border-accent: #6366f1;
-
-  --text-primary: #f1f3f9;
-  --text-secondary: #949db2;
-  --text-muted: #5e667d;
-  --text-inverse: #0a0b10;
-
-  --accent-primary: #6366f1;
-  --accent-primary-hover: #4f46e5;
-  --accent-glow: rgba(99, 102, 241, 0.25);
-
-  --color-raw: #f59e0b;
-  --color-raw-bg: rgba(245, 158, 11, 0.12);
-  --color-raw-border: rgba(245, 158, 11, 0.35);
-
-  --color-prepared: #10b981;
-  --color-prepared-bg: rgba(16, 185, 129, 0.12);
-  --color-prepared-border: rgba(16, 185, 129, 0.35);
-
-  --color-cyan: #06b6d4;
-  --color-cyan-bg: rgba(6, 182, 212, 0.12);
-
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --background: oklch(0.13 0.008 250);
+  --foreground: oklch(0.94 0.012 80);
+  --card: oklch(0.16 0.009 250);
+  --card-foreground: oklch(0.94 0.012 80);
+  --popover: oklch(0.16 0.009 250);
+  --popover-foreground: oklch(0.94 0.012 80);
+  --primary: oklch(0.69 0.18 42);
+  --primary-hover: oklch(0.74 0.17 48);
+  --primary-foreground: oklch(0.14 0.015 35);
+  --primary-soft: oklch(0.69 0.18 42 / 0.1);
+  --secondary: oklch(0.185 0.008 250);
+  --secondary-foreground: oklch(0.78 0.012 80);
+  --muted: oklch(0.19 0.008 250);
+  --muted-foreground: oklch(0.61 0.014 250);
+  --accent: oklch(0.22 0.01 250);
+  --accent-foreground: oklch(0.94 0.012 80);
+  --destructive: oklch(0.7 0.18 25);
+  --destructive-foreground: oklch(0.14 0.015 25);
+  --border: oklch(0.26 0.009 250);
+  --border-strong: oklch(0.36 0.012 250);
+  --input: oklch(0.26 0.009 250);
+  --ring: oklch(0.69 0.18 42);
+  --panel: oklch(0.165 0.009 250);
+  --panel-raised: oklch(0.18 0.009 250);
+  --workspace: oklch(0.115 0.007 250);
+  --code: oklch(0.105 0.007 250);
+  --code-foreground: oklch(0.85 0.01 80);
+  --raw: oklch(0.69 0.18 42);
+  --raw-foreground: oklch(0.14 0.015 35);
+  --raw-soft: oklch(0.69 0.18 42 / 0.1);
+  --raw-border: oklch(0.69 0.18 42 / 0.34);
+  --prepared: oklch(0.72 0.13 155);
+  --prepared-foreground: oklch(0.13 0.02 155);
+  --prepared-soft: oklch(0.72 0.13 155 / 0.09);
+  --prepared-border: oklch(0.72 0.13 155 / 0.3);
+  --prepared-canvas: oklch(0.11 0.016 155);
+  --prepared-text: oklch(0.82 0.09 155);
+  --warning: oklch(0.78 0.15 85);
+  --editor-shadow: 0 20px 55px oklch(0.03 0 0 / 0.32);
+  --action-shadow: 0 8px 24px oklch(0.69 0.18 42 / 0.18);
+  --status-shadow: 0 0 9px oklch(0.72 0.13 155 / 0.55);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -41,7 +49,6 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px -5px var(--accent-glow);
 }
 
 * {
@@ -51,9 +58,9 @@
 }
 
 html, body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 15px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -68,23 +75,23 @@ html, body {
 }
 
 code, pre {
-  font-family: var(--font-mono);
+  font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 button {
-  font-family: var(--font-sans);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   cursor: pointer;
   border: none;
   outline: none;
 }
 
 textarea {
-  font-family: var(--font-mono);
+  font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   resize: vertical;
 }
 
 a {
-  color: var(--accent-primary);
+  color: var(--primary);
   text-decoration: none;
 }
 
